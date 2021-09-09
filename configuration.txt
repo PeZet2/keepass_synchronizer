@@ -1,0 +1,2 @@
+DBPATH=pydb.kdbx
+PASS_ENC=hiuGIUGbiUGIRUgIUG$I$U3i
