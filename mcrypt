@@ -1,0 +1,50 @@
+#!/bin/bash
+
+arg_error_msg=$'\r\nLista argumentow. Podaj:\r\n'
+arg_error_msg=$arg_error_msg$' ARG1 - tryb dzialania\r\n'
+arg_error_msg=$arg_error_msg$'  -e szyfrowanie tekstu\r\n'
+arg_error_msg=$arg_error_msg$'  -d deszyfrowanie hasla\r\n'
+arg_error_msg=$arg_error_msg$' ARG2 - haslo lub szyfr\r\n'
+
+mode=${1}
+arg=${2}
+
+encoded=""
+decoded=""
+salt="FGt%4gdT65Hfbfjk^f45v"
+
+
+if [ "$arg" == "" ] || [ "$mode" == "" ]
+then
+	echo "Blad parametru. $arg_error_msg"
+	exit
+fi
+
+
+encode(){
+	pass=${1}
+	encoded=`echo "$pass" | openssl aes-256-cbc -a -pbkdf2 -salt -pass pass:"$salt"`
+}
+
+decode(){
+	pass=${1}
+	decoded=`echo "$pass" | openssl aes-256-cbc -a -pbkdf2 -d -salt -pass pass:"$salt"`
+}
+
+
+
+if [ "$mode" == "-e" ]
+then 
+	encode "$arg"
+	echo "$encoded"
+elif [ "$mode" == "-d" ]
+then 
+	decode "$arg"
+	echo "$decoded"
+else
+	echo "Format niewspierany. $arg_error_msg"
+	exit
+fi
+
+
+
